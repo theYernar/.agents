@@ -1,4 +1,4 @@
-# Project-Scoped Rules: GT Oil Flutter
+# Project-Scoped Rules
 
 This file contains the consolidated coding style and architectural rules derived from the project's `.agents/skills/feature` instructions and existing codebase. All future feature implementations and code edits should adhere to these guidelines.
 
