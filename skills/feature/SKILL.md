@@ -23,9 +23,9 @@ lib/src/feature/<feature_name>/
     └── widgets/
 ```
 
-Create only the folders the feature actually needs. For UI-only features, `presentation/pages` and `presentation/widgets` may be enough. For API-backed features, add `data`, `model`, and usually `bloc`.
+Create only the folders the feature actually needs. For UI-only features, `ui/pages` and `ui/widgets` may be enough. For API-backed features, add `data`, `model`, and usually `bloc`.
 
-Avoid the old names `models`, `ui`, and `cubit`; the current project uses `model`, `presentation`, and `bloc`.
+Avoid the old names `models` and `cubit`; the current project uses `model`, `ui`, and `bloc`.
 
 ## Data Layer
 
@@ -102,7 +102,7 @@ When a Cubit awaits async work, guard late emits with `if (isClosed) return;` be
 
 ## Presentation
 
-Put route-level screens in `presentation/pages` and extracted screen pieces in `presentation/widgets`.
+Put route-level screens in `ui/pages` and extracted screen pieces in `ui/widgets`.
 
 Reuse core UI before creating new widgets:
 

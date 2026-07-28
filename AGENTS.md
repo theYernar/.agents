@@ -90,3 +90,68 @@ Before considering a task complete, verify that:
 - No `_buildWidget()`-style helper methods were introduced.
 - New widgets are extracted into separate files when appropriate.
 - The implementation is consistent with the existing project architecture.
+
+## 7. Error Handling
+- Use `errorMessageOf(error)` from `core/utils/error_message_util.dart` to extract user-facing messages from `RestClientException` and other errors.
+- In Cubit/Bloc: wrap async calls in `try { ... } on Object catch (error)`.
+- Emit `failure(message: errorMessageOf(error))` — never expose raw exception types or stack traces to UI.
+- Handle 401 (session expired) at the interceptor level (`DioInterceptor.onUnauthorized`), not in individual cubits.
+- Standard async Cubit pattern:
+```dart
+Future<void> loadData() async {
+  emit(const MyState.loading());
+  try {
+    final result = await _repository.getData();
+    if (isClosed) return;
+    emit(MyState.loaded(data: result));
+  } on Object catch (error) {
+    if (isClosed) return;
+    emit(MyState.failure(message: errorMessageOf(error)));
+  }
+}
+```
+
+## 8. Core Widget Inventory
+Reusable widgets live in `lib/src/core/presentation/widgets/`. Check here before creating feature-specific widgets:
+- `bottom_sheet/` — bottom sheet templates
+- `buttons/` — CTA, icon, text buttons
+- `cards/` — card layouts
+- `checkboxes/` — checkbox variants
+- `chips/` — chip/tag components
+- `dialogs/` — alert, confirmation dialogs
+- `forms/` — form containers, validation
+- `indicators/` — loading, progress indicators
+- `layout/` — scaffold wrappers, spacing helpers
+- `media/` — image, video viewers
+- `menu/` — popup, dropdown menus
+- `textfields/` — input fields, search bars
+
+## 9. Makefile Shortcuts
+Use `Makefile` targets instead of raw commands:
+- `make clean` — flutter clean + pub get + pod install
+- `make gen` — `dart run build_runner build --delete-conflicting-outputs`
+- `make format` — `dart format .`
+- `make analyze` — `flutter analyze`
+- `make l10n` — `flutter gen-l10n`
+- `make check` — format + analyze
+- `make apk` — release APK build (with .env)
+- `make aab` — release AAB build (with .env)
+
+## 10. Extension Methods
+Extensions live in `lib/src/core/utils/extensions/`. **Always prefer using an existing extension over writing inline utility logic.** If a useful helper does not yet exist, add it as a new extension method in the appropriate file (or create a new file in the same directory) rather than duplicating logic across features.
+
+### Available Extensions
+
+| File | Extension | Key Methods / Properties |
+|------|-----------|--------------------------|
+| `context_extension.dart` | `ContextExtension` on `BuildContext` | `context.dependencies`, `context.repository`, `context.localized`, `context.mediaQuery`, `context.screenSize`, `context.viewPadding`, `context.viewInsets`, `context.theme`, `context.textTheme`, `context.platform`, `context.navigator`, `context.focusScope` |
+| `string_extension.dart` | `StringExtension` on `String` | `.limit(length)`, `.formatAsPhone()`, `.cleanPhone()`, `.formatAsLicensePlate()`, `.formatAsDate()`, `.formatAsReadableDate()` |
+| `string_extension.dart` | `NullableStringExtension` on `String?` | `.formatAsReadableDate()` |
+| `integer_extension.dart` | `IntegerExtension` on `num?` | `.thousandFormat()` |
+| `duration_extension.dart` | `DurationExtension` on `Duration` | `.delayed()`, `.sleep` |
+| `bloc_extension.dart` | `StateNotifierMixin` on `BlocBase` | `notify(state, notifyDelay:, then:)` |
+
+### Rules
+- **Never duplicate extension logic inline.** For example, use `context.localized` instead of `Localization.of(context)`, and `myNumber.thousandFormat()` instead of manual `NumberFormat` calls.
+- **Check this table first** before writing any utility helper. If the logic fits an existing extension, use it.
+- **When adding new helpers**, place them in the matching extension file or create a new `<type>_extension.dart` in the same directory. Follow the existing naming convention (`<Type>Extension on <Type>`).

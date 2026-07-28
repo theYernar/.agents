@@ -52,6 +52,19 @@ For docs, markdown, SVG, or comment-only changes:
 
 Always run `git diff --check` before declaring the tree commit-ready.
 
+## Makefile
+
+The project has a `Makefile` with shortcut targets. Prefer these over raw commands:
+
+- `make format` — `dart format .`
+- `make analyze` — `flutter analyze`
+- `make gen` — `dart run build_runner build --delete-conflicting-outputs`
+- `make l10n` — `flutter gen-l10n`
+- `make check` — format + analyze
+- `make clean` — flutter clean + pub get + pod install
+- `make apk` — release APK build
+- `make aab` — release AAB build
+
 ## Failure Handling
 
 If a command fails, stop the ready-to-commit claim and report:
