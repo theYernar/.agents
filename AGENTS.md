@@ -4,7 +4,7 @@ This file contains the consolidated coding style and architectural rules derived
 
 ## 1. Feature Architecture & Folder Structure
 Features are located under `lib/src/feature/<feature_name>`. 
-Each feature should stick to a separation of concerns using the following standardized sub-directories (avoid older names like `ui`, `models`, or `cubit` for new features):
+Each feature should stick to a separation of concerns using the following standardized sub-directories (avoid older names like `models` or `cubit` for new features):
 - **`bloc/`**: Contains Bloc/Cubit state managers.
 - **`data/`**: Contains repositories and remote data sources.
 - **`model/`**: Contains DTOs and feature-specific models.
@@ -21,7 +21,7 @@ The data layer relies strictly on interfaces and Dependency Injection.
 
 ## 3. State Management (Bloc / Cubit)
 - **Folder**: Always place state managers in the `bloc/` folder, even if using Cubit.
-- **States & Events**: Use union states for mutually exclusive flows (e.g., loading, loaded, failure). You can use `freezed` by default, or Dart 3 `sealed class` combined with `Equatable`.
+- **States & Events**: Use union states for mutually exclusive flows (e.g., loading, success, failure). Use `freezed` with `sealed class` for new Cubit/Bloc states.
 - **Naming & Content**: 
   - Use `failure` for UI error states (e.g., `AppState.failure(message: ...)`).
   - Use domain-specific events (`AppLoggedOut`), not generic ones (`ChangeState`).
@@ -39,6 +39,7 @@ Before completing any Dart/Flutter feature code, always format and lint:
 dart format .
 flutter analyze
 ```
+Run `flutter test` when behavior, widgets, routing, Bloc/Cubit, models, repositories, or parsing are affected.
 Run generation commands when necessary:
 ```sh
 flutter gen-l10n
@@ -103,7 +104,7 @@ Future<void> loadData() async {
   try {
     final result = await _repository.getData();
     if (isClosed) return;
-    emit(MyState.loaded(data: result));
+    emit(MyState.success(data: result));
   } on Object catch (error) {
     if (isClosed) return;
     emit(MyState.failure(message: errorMessageOf(error)));

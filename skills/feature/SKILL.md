@@ -36,7 +36,7 @@ abstract interface class IExampleRemoteDS {
   Future<ExampleResponseDTO> getExample();
 }
 
-class ExampleRemoteDSImpl implements IExampleRemoteDS {
+final class ExampleRemoteDSImpl implements IExampleRemoteDS {
   const ExampleRemoteDSImpl({required this.restClient});
 
   final IRestClient restClient;
@@ -56,7 +56,7 @@ abstract interface class IExampleRepository {
   Future<ExampleResponseDTO> getExample();
 }
 
-class ExampleRepositoryImpl implements IExampleRepository {
+final class ExampleRepositoryImpl implements IExampleRepository {
   const ExampleRepositoryImpl({required this.remoteDS});
 
   final IExampleRemoteDS remoteDS;

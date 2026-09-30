@@ -73,7 +73,7 @@ abstract interface class IExampleRemoteDS {
 **Implementation** — add the REST call:
 
 ```dart
-class ExampleRemoteDSImpl implements IExampleRemoteDS {
+final class ExampleRemoteDSImpl implements IExampleRemoteDS {
   const ExampleRemoteDSImpl({required this.restClient});
 
   final IRestClient restClient;
@@ -129,7 +129,7 @@ abstract interface class IExampleRepository {
   Future<void> createExample(Map<String, dynamic> body);
 }
 
-class ExampleRepositoryImpl implements IExampleRepository {
+final class ExampleRepositoryImpl implements IExampleRepository {
   const ExampleRepositoryImpl({required this.remoteDS});
 
   final IExampleRemoteDS remoteDS;

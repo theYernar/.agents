@@ -31,7 +31,7 @@ Future<void> doSomething() async {
   try {
     final result = await _repository.doSomething();
     if (isClosed) return;
-    emit(MyState.loaded(data: result));
+    emit(MyState.success(data: result));
   } on Object catch (error) {
     if (isClosed) return;
     emit(MyState.failure(message: errorMessageOf(error)));
